@@ -1,45 +1,59 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.CustomerProfile;
-import com.example.demo.model.TierHistoryRecord;
-import com.example.demo.model.PurchaseRecord;
 import com.example.demo.model.TierUpgradeRule;
-import com.example.demo.model.VisitRecord;
-import com.example.demo.repository.CustomerProfileRepository;
-import com.example.demo.repository.PurchaseRecordRepository;
 import com.example.demo.repository.TierUpgradeRuleRepository;
-import com.example.demo.repository.TierHistoryRecordRepository;
-import com.example.demo.repository.VisitRecordRepository;
-import com.example.demo.service.TierUpgradeEngineService;
+import com.example.demo.service.TierUpgradeRuleService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
-public class TierUpgradeRuleServiceImpl implements TierUpgradeEngineService {
+public class TierUpgradeRuleServiceImpl implements TierUpgradeRuleService {
 
-    private final CustomerProfileRepository customerRepo;
-    private final PurchaseRecordRepository purchaseRepo;
-    private final VisitRecordRepository visitRepo;
-    private final TierUpgradeRuleRepository ruleRepo;
-    private final TierHistoryRecordRepository historyRepo; // ✅ Add history repo
+    private final TierUpgradeRuleRepository repository;
 
-    public TierUpgradeRuleServiceImpl(CustomerProfileRepository customerRepo,
-                                        PurchaseRecordRepository purchaseRepo,
-                                        VisitRecordRepository visitRepo,
-                                        TierUpgradeRuleRepository ruleRepo,
-                                        TierHistoryRecordRepository historyRepo) {
-        this.customerRepo = customerRepo;
-        this.purchaseRepo = purchaseRepo;
-        this.visitRepo = visitRepo;
-        this.ruleRepo = ruleRepo;
-        this.historyRepo = historyRepo;
+    public TierUpgradeRuleServiceImpl(TierUpgradeRuleRepository repository) {
+        this.repository = repository;
     }
 
-    // --- Other methods omitted for brevity ---
-    
     @Override
-    public List<TierHistoryRecord> getHistory(Long customerId) {
-        return historyRepo.findByCustomerId(customerId);
+    public TierUpgradeRule createRule(TierUpgradeRule rule) {
+        return repository.save(rule);
+    }
+
+    @Override
+    public TierUpgradeRule updateRule(Long id, TierUpgradeRule updated) {
+        TierUpgradeRule existing = repository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Rule not found"));
+
+        existing.setFromTier(updated.getFromTier());
+        existing.setToTier(updated.getToTier());
+        existing.setMinSpend(updated.getMinSpend());
+        existing.setMinVisits(updated.getMinVisits());
+        existing.setActive(updated.getActive());
+
+        return repository.save(existing);
+    }
+
+    @Override
+    public TierUpgradeRule getRule(String fromTier, String toTier) {
+        return repository.findByFromTierAndToTier(fromTier, toTier)
+                .orElseThrow(() -> new NoSuchElementException("Rule not found"));
+    }
+
+    @Override
+    public List<TierUpgradeRule> getActiveRules() {
+        return repository.findByActiveTrue();
+    }
+
+    @Override
+    public List<TierUpgradeRule> getAllRules() {
+        return repository.findAll();
+    }
+
+    @Override
+    public void deleteRule(Long id) {
+        repository.deleteById(id);
     }
 }
