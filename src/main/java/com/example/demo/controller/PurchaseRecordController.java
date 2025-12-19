@@ -35,9 +35,4 @@ public class PurchaseRecordController {
     public List<PurchaseRecord> getAll() {
         return service.getAllPurchases();
     }
-
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        service.deletePurchase(id);
-    }
 }
