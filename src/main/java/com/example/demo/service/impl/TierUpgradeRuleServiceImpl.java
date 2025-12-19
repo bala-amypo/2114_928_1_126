@@ -3,6 +3,8 @@ package com.example.demo.service.impl;
 import com.example.demo.model.TierUpgradeRule;
 import com.example.demo.repository.TierUpgradeRuleRepository;
 import com.example.demo.service.TierUpgradeRuleService;
+import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.NoSuchElementException;

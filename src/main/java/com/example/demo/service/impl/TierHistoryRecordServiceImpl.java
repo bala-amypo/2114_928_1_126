@@ -3,6 +3,8 @@ package com.example.demo.service.impl;
 import com.example.demo.model.TierHistoryRecord;
 import com.example.demo.repository.TierHistoryRecordRepository;
 import com.example.demo.service.TierHistoryRecordService;
+import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.NoSuchElementException;
