@@ -40,9 +40,4 @@ public class CustomerProfileController {
     public CustomerProfile update(@PathVariable Long id, @RequestBody CustomerProfile c) {
         return service.updateCustomer(id, c);
     }
-
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        service.deleteCustomer(id);
-    }
 }

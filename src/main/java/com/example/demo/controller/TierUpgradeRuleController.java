@@ -42,8 +42,5 @@ public class TierUpgradeRuleController {
         return service.getAllRules();
     }
 
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        service.deleteRule(id);
-    }
+    
 }
