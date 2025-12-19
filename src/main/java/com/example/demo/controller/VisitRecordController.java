@@ -35,9 +35,4 @@ public class VisitRecordController {
     public List<VisitRecord> getAll() {
         return service.getAllVisits();
     }
-
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        service.deleteVisit(id);
-    }
 }
