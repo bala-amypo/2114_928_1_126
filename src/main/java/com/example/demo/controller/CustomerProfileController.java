@@ -36,7 +36,7 @@ public class CustomerProfileController {
         return service.getAllCustomers();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/tier")
     public CustomerProfile update(@PathVariable Long id, @RequestBody CustomerProfile c) {
         return service.updateCustomer(id, c);
     }
