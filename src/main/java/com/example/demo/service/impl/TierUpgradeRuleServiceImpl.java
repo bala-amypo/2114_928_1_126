@@ -24,7 +24,7 @@ public class TierUpgradeRuleServiceImpl implements TierUpgradeEngineService {
     private final TierUpgradeRuleRepository ruleRepo;
     private final TierHistoryRecordRepository historyRepo; // ✅ Add history repo
 
-    public TierUpgradeEngineServiceImpl(CustomerProfileRepository customerRepo,
+    public TierUpgradeRuleServiceImpl(CustomerProfileRepository customerRepo,
                                         PurchaseRecordRepository purchaseRepo,
                                         VisitRecordRepository visitRepo,
                                         TierUpgradeRuleRepository ruleRepo,
