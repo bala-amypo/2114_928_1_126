@@ -7,7 +7,6 @@ import com.example.demo.repository.TierHistoryRecordRepository;
 import com.example.demo.service.TierUpgradeEngineService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -22,14 +21,12 @@ public class TierUpgradeEngineServiceImpl implements TierUpgradeEngineService {
         this.historyRepository = historyRepository;
     }
 
-    // ================= POST =================
-
     @Override
     public CustomerProfile applyTierUpgrade(Long customerId) {
+
         CustomerProfile customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
 
-        // Dummy upgrade logic (can improve later)
         String oldTier = customer.getCurrentTier();
         String newTier = "GOLD";
 
@@ -41,7 +38,6 @@ public class TierUpgradeEngineServiceImpl implements TierUpgradeEngineService {
             history.setOldTier(oldTier);
             history.setNewTier(newTier);
             history.setReason("Auto upgrade");
-            history.setChangedAt(LocalDateTime.now());
 
             historyRepository.save(history);
             customerRepository.save(customer);
@@ -50,8 +46,7 @@ public class TierUpgradeEngineServiceImpl implements TierUpgradeEngineService {
         return customer;
     }
 
-    // ================= GET (3 APIs) =================
-
+    // ===== 3 GET OPERATIONS =====
     @Override
     public List<TierHistoryRecord> getHistory(Long customerId) {
         return historyRepository.findByCustomerId(customerId);
@@ -60,7 +55,7 @@ public class TierUpgradeEngineServiceImpl implements TierUpgradeEngineService {
     @Override
     public TierHistoryRecord getHistoryById(Long id) {
         return historyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("History record not found"));
+                .orElseThrow(() -> new RuntimeException("History not found"));
     }
 
     @Override
