@@ -5,9 +5,9 @@ import com.example.demo.repository.TierUpgradeRuleRepository;
 import com.example.demo.service.TierUpgradeRuleService;
 import org.springframework.stereotype.Service;
 
-
 import java.util.List;
 import java.util.NoSuchElementException;
+
 @Service
 public class TierUpgradeRuleServiceImpl implements TierUpgradeRuleService {
 
@@ -17,10 +17,12 @@ public class TierUpgradeRuleServiceImpl implements TierUpgradeRuleService {
         this.repository = repository;
     }
 
+    @Override
     public TierUpgradeRule createRule(TierUpgradeRule rule) {
         return repository.save(rule);
     }
 
+    @Override
     public TierUpgradeRule updateRule(Long id, TierUpgradeRule updated) {
         TierUpgradeRule existing = repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Rule not found"));
@@ -34,20 +36,22 @@ public class TierUpgradeRuleServiceImpl implements TierUpgradeRuleService {
         return repository.save(existing);
     }
 
+    @Override
     public TierUpgradeRule getRule(String fromTier, String toTier) {
         return repository.findByFromTierAndToTier(fromTier, toTier)
                 .orElseThrow(() -> new NoSuchElementException("Rule not found"));
     }
 
+    @Override
     public List<TierUpgradeRule> getActiveRules() {
         return repository.findByActiveTrue();
     }
 
+    @Override
     public List<TierUpgradeRule> getAllRules() {
         return repository.findAll();
     }
 
+    @Override
     public void deleteRule(Long id) {
-        repository.deleteById(id);
-    }
-}
+        if (!repository.existsById(id)) {
