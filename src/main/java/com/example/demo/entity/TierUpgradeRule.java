@@ -3,42 +3,38 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(
-    name = "tier_upgrade_rule",
-    uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"fromTier", "toTier"})
-    }
-)
+@Table(name = "tier_upgrade_rule")
 public class TierUpgradeRule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String fromTier;
-
-    @Column(nullable = false)
     private String toTier;
-
     private Double minSpend;
-
     private Integer minVisits;
-
     private Boolean active;
 
     @PrePersist
-    public void validate() {
-        if (minSpend != null && minSpend < 0) {
-            throw new IllegalArgumentException("minSpend cannot be negative");
-        }
-        if (minVisits != null && minVisits < 0) {
-            throw new IllegalArgumentException("minVisits cannot be negative");
-        }
-        if (active == null) {
-            active = true;
-        }
+    public void prePersist() {
+        if (active == null) active = true;
     }
 
-    // getters and setters
+    public Long getId() { return id; }
+
+    public String getFromTier() { return fromTier; }
+    public void setFromTier(String fromTier) { this.fromTier = fromTier; }
+
+    public String getToTier() { return toTier; }
+    public void setToTier(String toTier) { this.toTier = toTier; }
+
+    public Double getMinSpend() { return minSpend; }
+    public void setMinSpend(Double minSpend) { this.minSpend = minSpend; }
+
+    public Integer getMinVisits() { return minVisits; }
+    public void setMinVisits(Integer minVisits) { this.minVisits = minVisits; }
+
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
 }

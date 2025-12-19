@@ -11,23 +11,22 @@ public class VisitRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private Long customerId;
-
+    private String channel;
     private LocalDate visitDate;
 
-    @Column(nullable = false)
-    private String channel;
-
     @PrePersist
-    public void validate() {
-        if (!("STORE".equals(channel) || "APP".equals(channel) || "WEB".equals(channel))) {
-            throw new IllegalArgumentException("Invalid visit channel");
-        }
-        if (visitDate == null) {
-            visitDate = LocalDate.now();
-        }
+    public void prePersist() {
+        if (visitDate == null) visitDate = LocalDate.now();
     }
 
-    // getters and setters
+    public Long getId() { return id; }
+    public Long getCustomerId() { return customerId; }
+    public void setCustomerId(Long customerId) { this.customerId = customerId; }
+
+    public String getChannel() { return channel; }
+    public void setChannel(String channel) { this.channel = channel; }
+
+    public LocalDate getVisitDate() { return visitDate; }
+    public void setVisitDate(LocalDate visitDate) { this.visitDate = visitDate; }
 }
