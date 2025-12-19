@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class TierUpgradeEngineServiceImpl implements TierUpgradeEngineService {
+public class TierUpgradeRuleServiceImpl implements TierUpgradeEngineService {
 
     private final CustomerProfileRepository customerRepo;
     private final PurchaseRecordRepository purchaseRepo;
