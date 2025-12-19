@@ -6,7 +6,7 @@ import com.example.demo.service.CustomerProfileService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-
+@Service
 public class CustomerProfileServiceImpl implements CustomerProfileService {
 
     private final CustomerProfileRepository repository;

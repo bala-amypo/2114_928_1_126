@@ -6,7 +6,7 @@ import com.example.demo.service.TierHistoryRecordService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-
+@Service
 public class TierHistoryRecordServiceImpl implements TierHistoryRecordService {
 
     private final TierHistoryRecordRepository repository;
