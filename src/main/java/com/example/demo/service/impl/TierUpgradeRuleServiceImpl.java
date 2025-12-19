@@ -1,59 +1,66 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.TierUpgradeRule;
-import com.example.demo.repository.TierUpgradeRuleRepository;
-import com.example.demo.service.TierUpgradeRuleService;
+import com.example.demo.model.CustomerProfile;
+import com.example.demo.model.TierHistoryRecord;
+import com.example.demo.repository.CustomerProfileRepository;
+import com.example.demo.repository.TierHistoryRecordRepository;
+import com.example.demo.service.TierUpgradeEngineService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
-public class TierUpgradeRuleServiceImpl implements TierUpgradeRuleService {
+public class TierUpgradeEngineServiceImpl implements TierUpgradeEngineService {
 
-    private final TierUpgradeRuleRepository repository;
+    private final CustomerProfileRepository customerRepository;
+    private final TierHistoryRecordRepository historyRepository;
 
-    public TierUpgradeRuleServiceImpl(TierUpgradeRuleRepository repository) {
-        this.repository = repository;
+    public TierUpgradeEngineServiceImpl(CustomerProfileRepository customerRepository,
+                                        TierHistoryRecordRepository historyRepository) {
+        this.customerRepository = customerRepository;
+        this.historyRepository = historyRepository;
+    }
+
+    // ================= POST =================
+    @Override
+    public CustomerProfile applyTierUpgrade(Long customerId) {
+
+        CustomerProfile customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+        String oldTier = customer.getCurrentTier();
+        String newTier = "GOLD"; // simple logic
+
+        if (!oldTier.equals(newTier)) {
+            customer.setCurrentTier(newTier);
+
+            TierHistoryRecord history = new TierHistoryRecord();
+            history.setCustomerId(customerId);
+            history.setOldTier(oldTier);
+            history.setNewTier(newTier);
+            history.setReason("Auto upgrade");
+
+            historyRepository.save(history);
+            customerRepository.save(customer);
+        }
+
+        return customer;
+    }
+
+    // ================= GET (3 APIs) =================
+    @Override
+    public List<TierHistoryRecord> getHistory(Long customerId) {
+        return historyRepository.findByCustomerId(customerId);
     }
 
     @Override
-    public TierUpgradeRule createRule(TierUpgradeRule rule) {
-        return repository.save(rule);
+    public TierHistoryRecord getHistoryById(Long id) {
+        return historyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("History record not found"));
     }
 
     @Override
-    public TierUpgradeRule updateRule(Long id, TierUpgradeRule updated) {
-        TierUpgradeRule existing = repository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Rule not found"));
-
-        existing.setFromTier(updated.getFromTier());
-        existing.setToTier(updated.getToTier());
-        existing.setMinSpend(updated.getMinSpend());
-        existing.setMinVisits(updated.getMinVisits());
-        existing.setActive(updated.getActive());
-
-        return repository.save(existing);
-    }
-
-    @Override
-    public TierUpgradeRule getRule(String fromTier, String toTier) {
-        return repository.findByFromTierAndToTier(fromTier, toTier)
-                .orElseThrow(() -> new NoSuchElementException("Rule not found"));
-    }
-
-    @Override
-    public List<TierUpgradeRule> getActiveRules() {
-        return repository.findByActiveTrue();
-    }
-
-    @Override
-    public List<TierUpgradeRule> getAllRules() {
-        return repository.findAll();
-    }
-
-    @Override
-    public void deleteRule(Long id) {
-        repository.deleteById(id);
+    public List<TierHistoryRecord> getAllHistory() {
+        return historyRepository.findAll();
     }
 }
