@@ -1,3 +1,6 @@
+package com.example.demo.service;
+
+import com.example.demo.model.CustomerProfile;
 import com.example.demo.model.TierHistoryRecord;
 
 import java.util.List;
