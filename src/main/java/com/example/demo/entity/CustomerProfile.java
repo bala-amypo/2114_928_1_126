@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -11,21 +10,10 @@ public class CustomerProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
-    private String customerId;
-
-    private String fullName;
-
-    @Column(unique = true)
+    private String name;
     private String email;
-
-    @Column(unique = true)
-    private String phone;
-
     private String currentTier;
-    private Boolean active;
-
-    private LocalDateTime createdAt;
+    private boolean active;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<PurchaseRecord> purchases;
@@ -34,14 +22,21 @@ public class CustomerProfile {
     private List<VisitRecord> visits;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-    private List<TierHistoryRecord> history;
+    private List<TierHistoryRecord> tierHistory;
 
-    @PrePersist
-    public void prePersist() {
-        this.createdAt = LocalDateTime.now();
-        if (this.currentTier == null) this.currentTier = "BRONZE";
-        if (this.active == null) this.active = true;
-    }
+    // GETTERS & SETTERS
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    // getters & setters
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public String getCurrentTier() { return currentTier; }
+    public void setCurrentTier(String currentTier) { this.currentTier = currentTier; }
+
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
 }

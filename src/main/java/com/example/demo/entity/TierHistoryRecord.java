@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 public class TierHistoryRecord {
@@ -13,16 +12,23 @@ public class TierHistoryRecord {
     private String oldTier;
     private String newTier;
     private String reason;
-    private LocalDateTime changedAt;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
+    @JoinColumn(name = "customer_id")
     private CustomerProfile customer;
 
-    @PrePersist
-    public void prePersist() {
-        this.changedAt = LocalDateTime.now();
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    // getters & setters
+    public String getOldTier() { return oldTier; }
+    public void setOldTier(String oldTier) { this.oldTier = oldTier; }
+
+    public String getNewTier() { return newTier; }
+    public void setNewTier(String newTier) { this.newTier = newTier; }
+
+    public String getReason() { return reason; }
+    public void setReason(String reason) { this.reason = reason; }
+
+    public CustomerProfile getCustomer() { return customer; }
+    public void setCustomer(CustomerProfile customer) { this.customer = customer; }
 }

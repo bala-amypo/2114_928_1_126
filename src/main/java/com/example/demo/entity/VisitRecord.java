@@ -1,32 +1,26 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
-import java.util.Set;
 
 @Entity
 public class VisitRecord {
-
-    private static final Set<String> VALID_CHANNELS =
-            Set.of("STORE", "APP", "WEB");
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDate visitDate;
-    private String channel;
+    private int visits;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
+    @JoinColumn(name = "customer_id")
     private CustomerProfile customer;
 
-    @PrePersist
-    public void validate() {
-        if (!VALID_CHANNELS.contains(channel)) {
-            throw new IllegalArgumentException("Invalid visit channel");
-        }
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    // getters & setters
+    public int getVisits() { return visits; }
+    public void setVisits(int visits) { this.visits = visits; }
+
+    public CustomerProfile getCustomer() { return customer; }
+    public void setCustomer(CustomerProfile customer) { this.customer = customer; }
 }
