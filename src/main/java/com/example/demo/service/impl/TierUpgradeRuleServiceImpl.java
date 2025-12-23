@@ -7,7 +7,7 @@ import com.example.demo.service.TierUpgradeRuleService;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
-
+@Service
 public class TierUpgradeRuleServiceImpl
         implements TierUpgradeRuleService {
 

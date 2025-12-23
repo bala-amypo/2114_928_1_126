@@ -6,7 +6,7 @@ import com.example.demo.service.VisitRecordService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-
+@Service
 public class VisitRecordServiceImpl implements VisitRecordService {
 
     private final VisitRecordRepository repository;

@@ -5,7 +5,7 @@ import com.example.demo.repository.*;
 import com.example.demo.service.TierUpgradeEngineService;
 
 import java.util.List;
-
+@Service
 public class TierUpgradeEngineServiceImpl
         implements TierUpgradeEngineService {
 
