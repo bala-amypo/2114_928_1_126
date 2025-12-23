@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.CustomerProfile;
+import com.example.demo.entity.CustomerProfile;
 import com.example.demo.service.CustomerProfileService;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,27 +17,17 @@ public class CustomerProfileController {
     }
 
     @PostMapping
-    public CustomerProfile create(@RequestBody CustomerProfile c) {
-        return service.createCustomer(c);
+    public CustomerProfile create(@RequestBody CustomerProfile customer) {
+        return service.create(customer);
     }
 
     @GetMapping("/{id}")
     public CustomerProfile get(@PathVariable Long id) {
-        return service.getCustomerById(id);
-    }
-
-    @GetMapping("/lookup/{customerId}")
-    public CustomerProfile lookup(@PathVariable String customerId) {
-        return service.findByCustomerId(customerId);
+        return service.getById(id);
     }
 
     @GetMapping
     public List<CustomerProfile> getAll() {
-        return service.getAllCustomers();
-    }
-
-    @PutMapping("/{id}/tier")
-    public CustomerProfile update(@PathVariable Long id, @RequestBody CustomerProfile c) {
-        return service.updateCustomer(id, c);
+        return service.getAll();
     }
 }
