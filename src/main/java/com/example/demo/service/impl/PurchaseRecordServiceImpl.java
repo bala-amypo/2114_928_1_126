@@ -6,6 +6,8 @@ import com.example.demo.service.PurchaseRecordService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import org.springframework.stereotype.Service;
+
 @Service
 public class PurchaseRecordServiceImpl implements PurchaseRecordService {
 
