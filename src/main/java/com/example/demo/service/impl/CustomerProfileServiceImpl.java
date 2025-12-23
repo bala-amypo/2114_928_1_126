@@ -29,8 +29,6 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
                 .orElseThrow(() -> new NoSuchElementException("Customer not found"));
     }
 
-    // Removed findByCustomerId() because 'customerId' does not exist in the entity
-
     @Override
     public List<CustomerProfile> getAllCustomers() {
         return customerRepo.findAll();
