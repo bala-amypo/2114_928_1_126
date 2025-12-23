@@ -8,3 +8,11 @@ import java.util.Optional;
 public interface CustomerProfileRepository extends JpaRepository<CustomerProfile, Long> {
     Optional<CustomerProfile> findByCustomerId(String customerId);
 }
+package com.example.demo.repository;
+
+import com.example.demo.entity.CustomerProfile;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CustomerProfileRepository
+        extends JpaRepository<CustomerProfile, Long> {
+}
