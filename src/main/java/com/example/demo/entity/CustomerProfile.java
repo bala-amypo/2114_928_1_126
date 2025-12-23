@@ -26,7 +26,7 @@ public class CustomerProfile {
         return id;
     }
 
-    public void setCustomerId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
