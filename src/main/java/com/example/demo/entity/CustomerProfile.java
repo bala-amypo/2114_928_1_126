@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
 public class CustomerProfile {
@@ -10,33 +9,51 @@ public class CustomerProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
+    private String customerId; // <-- Add this field
+
     private String name;
-    private String email;
     private String currentTier;
     private boolean active;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-    private List<PurchaseRecord> purchases;
+    // Getters and setters
+    public Long getId() {
+        return id;
+    }
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-    private List<VisitRecord> visits;
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-    private List<TierHistoryRecord> tierHistory;
+    public String getCustomerId() {
+        return customerId;
+    }
 
-    // GETTERS & SETTERS
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public String getName() {
+        return name;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public String getCurrentTier() { return currentTier; }
-    public void setCurrentTier(String currentTier) { this.currentTier = currentTier; }
+    public String getCurrentTier() {
+        return currentTier;
+    }
 
-    public boolean isActive() { return active; }
-    public void setActive(boolean active) { this.active = active; }
+    public void setCurrentTier(String currentTier) {
+        this.currentTier = currentTier;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 }

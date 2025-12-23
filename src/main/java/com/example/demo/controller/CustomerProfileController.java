@@ -5,7 +5,6 @@ import com.example.demo.service.CustomerProfileService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -42,12 +41,9 @@ public class CustomerProfileController {
         customerProfileService.updateTier(id, newTier);
     }
 
-    // PUT /api/customers/{id}/status
-    @PutMapping("/{id}/status")
-    public void updateStatus(@PathVariable Long id,
-                             @RequestParam boolean active) {
-        customerProfileService.updateStatus(id, active);
+    // GET /api/customers/lookup/{customerId}
+    @GetMapping("/lookup/{customerId}")
+    public CustomerProfile lookupByCustomerId(@PathVariable String customerId) {
+        return customerProfileService.findByCustomerId(customerId);
     }
-
-    // Removed /lookup/{customerId} endpoint because customerId does not exist
-}
+}  
