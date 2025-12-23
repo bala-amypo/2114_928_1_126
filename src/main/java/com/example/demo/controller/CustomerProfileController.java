@@ -2,9 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.model.CustomerProfile;
 import com.example.demo.service.CustomerProfileService;
-import com.example.demo.dto.CustomerProfileRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,68 +10,34 @@ import java.util.List;
 @RequestMapping("/api/customers")
 public class CustomerProfileController {
 
-    private final CustomerProfileService customerProfileService;
+    private final CustomerProfileService service;
 
-    @Autowired
-    public CustomerProfileController(CustomerProfileService customerProfileService) {
-        this.customerProfileService = customerProfileService;
+    public CustomerProfileController(CustomerProfileService service) {
+        this.service = service;
     }
 
-    // CREATE new customer
     @PostMapping
-    public ResponseEntity<CustomerProfile> createCustomer(@RequestBody CustomerProfileRequest request) {
-        CustomerProfile customer = new CustomerProfile();
-        if (request.getCustomerId() != null) {
-            customer.setCustomerId(Long.valueOf(request.getCustomerId())); // convert String -> Long
-        }
-        customer.setFullName(request.getFullName());
-        customer.setEmail(request.getEmail());
-        customer.setPhone(request.getPhone());
-        customer.setUsername(request.getUsername());
-        customer.setPassword(request.getPassword());
-        customer.setActive(request.isActive());
-        customer.setCurrentTier(request.getCurrentTier());
-
-        CustomerProfile saved = customerProfileService.saveCustomer(customer);
-        return ResponseEntity.ok(saved);
+    public CustomerProfile create(@RequestBody CustomerProfile c) {
+        return service.createCustomer(c);
     }
 
-    // READ all customers
-    @GetMapping
-    public ResponseEntity<List<CustomerProfile>> getAllCustomers() {
-        List<CustomerProfile> customers = customerProfileService.getAllCustomers();
-        return ResponseEntity.ok(customers);
-    }
-
-    // READ customer by ID
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerProfile> getCustomerById(@PathVariable Long id) {
-        CustomerProfile customer = customerProfileService.getCustomerById(id);
-        return ResponseEntity.ok(customer);
+    public CustomerProfile get(@PathVariable Long id) {
+        return service.getCustomerById(id);
     }
 
-    // UPDATE customer
-    @PutMapping("/{id}")
-    public ResponseEntity<CustomerProfile> updateCustomer(
-            @PathVariable Long id,
-            @RequestBody CustomerProfileRequest request) {
-        CustomerProfile customer = customerProfileService.getCustomerById(id);
-        customer.setFullName(request.getFullName());
-        customer.setEmail(request.getEmail());
-        customer.setPhone(request.getPhone());
-        customer.setUsername(request.getUsername());
-        customer.setPassword(request.getPassword());
-        customer.setActive(request.isActive());
-        customer.setCurrentTier(request.getCurrentTier());
-
-        CustomerProfile updated = customerProfileService.saveCustomer(customer);
-        return ResponseEntity.ok(updated);
+    @GetMapping("/lookup/{customerId}")
+    public CustomerProfile lookup(@PathVariable String customerId) {
+        return service.findByCustomerId(customerId);
     }
 
-    // DELETE customer
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCustomer(@PathVariable Long id) {
-        customerProfileService.deleteCustomer(id);
-        return ResponseEntity.ok("Customer deleted successfully");
+    @GetMapping
+    public List<CustomerProfile> getAll() {
+        return service.getAllCustomers();
+    }
+
+    @PutMapping("/{id}/tier")
+    public CustomerProfile update(@PathVariable Long id, @RequestBody CustomerProfile c) {
+        return service.updateCustomer(id, c);
     }
 }
