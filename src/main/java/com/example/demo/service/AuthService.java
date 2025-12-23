@@ -4,6 +4,6 @@ import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.RegisterRequest;
 
 public interface AuthService {
-    void register(RegisterRequest request);
+    void register(RegisterRequest request); // match return type
     String login(LoginRequest request);
 }

@@ -25,9 +25,8 @@ public class AuthServiceImpl implements AuthService {
         this.jwtUtil = jwtUtil;
     }
 
-    // Registration
     @Override
-    public String register(RegisterRequest request) {
+    public void register(RegisterRequest request) {
         if (customerRepository.existsByUsername(request.getUsername())) {
             throw new BadRequestException("Username is already taken");
         }
@@ -40,10 +39,8 @@ public class AuthServiceImpl implements AuthService {
         customer.setActive(true);
 
         customerRepository.save(customer);
-        return "Registration successful";
     }
 
-    // Login
     @Override
     public String login(LoginRequest request) {
         CustomerProfile customer = customerRepository
@@ -54,7 +51,6 @@ public class AuthServiceImpl implements AuthService {
             throw new BadRequestException("Invalid username or password");
         }
 
-        // Generate JWT token
         return jwtUtil.generateToken(customer.getUsername());
     }
 }
