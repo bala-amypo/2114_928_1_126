@@ -6,50 +6,50 @@ import com.example.demo.service.TierUpgradeRuleService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 
 @Service
-public class TierUpgradeRuleServiceImpl
-        implements TierUpgradeRuleService {
+public class TierUpgradeRuleServiceImpl implements TierUpgradeRuleService {
 
-    private final TierUpgradeRuleRepository repository;
+    private final TierUpgradeRuleRepository ruleRepo;
 
-    public TierUpgradeRuleServiceImpl(TierUpgradeRuleRepository repository) {
-        this.repository = repository;
+    public TierUpgradeRuleServiceImpl(TierUpgradeRuleRepository ruleRepo) {
+        this.ruleRepo = ruleRepo;
     }
 
     @Override
     public TierUpgradeRule createRule(TierUpgradeRule rule) {
-        return repository.save(rule);
+        return ruleRepo.save(rule);
     }
 
     @Override
     public TierUpgradeRule updateRule(Long id, TierUpgradeRule rule) {
-        TierUpgradeRule existing = repository.findById(id)
-                .orElseThrow(NoSuchElementException::new);
+        TierUpgradeRule existing = ruleRepo.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Rule not found"));
+
+        existing.setFromTier(rule.getFromTier());
+        existing.setToTier(rule.getToTier());
         existing.setMinSpend(rule.getMinSpend());
         existing.setMinVisits(rule.getMinVisits());
         existing.setActive(rule.getActive());
-        return repository.save(existing);
+
+        return ruleRepo.save(existing);
     }
 
     @Override
     public TierUpgradeRule getRule(String fromTier, String toTier) {
-        return repository.findByFromTierAndToTier(fromTier, toTier)
-                .orElseThrow(NoSuchElementException::new);
+        return ruleRepo.findByFromTierAndToTier(fromTier, toTier)
+                .orElseThrow(() -> new NoSuchElementException("Rule not found"));
     }
 
     @Override
     public List<TierUpgradeRule> getActiveRules() {
-        return repository.findAll()
-                .stream()
-                .filter(TierUpgradeRule::getActive)
-                .collect(Collectors.toList());
+        return ruleRepo.findByActiveTrue();
     }
 
     @Override
     public List<TierUpgradeRule> getAllRules() {
-        return repository.findAll();
+        return ruleRepo.findAll();
     }
 }

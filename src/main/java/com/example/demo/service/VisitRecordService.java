@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface VisitRecordService {
 
-    VisitRecord recordVisit(VisitRecord visit);
+    VisitRecord recordVisit(Long customerId, VisitRecord visit);
 
     List<VisitRecord> getVisitsByCustomer(Long customerId);
 
-    List<VisitRecord> getAllVisits();
-
     VisitRecord getVisitById(Long id);
+
+    List<VisitRecord> getAllVisits();
 }

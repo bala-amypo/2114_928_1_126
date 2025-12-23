@@ -5,11 +5,12 @@ import com.example.demo.repository.*;
 import com.example.demo.service.TierUpgradeEngineService;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+
 import org.springframework.stereotype.Service;
 
 @Service
-public class TierUpgradeEngineServiceImpl
-        implements TierUpgradeEngineService {
+public class TierUpgradeEngineServiceImpl implements TierUpgradeEngineService {
 
     private final CustomerProfileRepository customerRepo;
     private final PurchaseRecordRepository purchaseRepo;
@@ -34,35 +35,38 @@ public class TierUpgradeEngineServiceImpl
     @Override
     public void evaluateAndUpgradeTier(Long customerId) {
         CustomerProfile customer = customerRepo.findById(customerId)
-                .orElseThrow();
+                .orElseThrow(() -> new NoSuchElementException("Customer not found"));
 
-        double totalSpend = purchaseRepo.findByCustomerId(customerId)
-                .stream().mapToDouble(PurchaseRecord::getAmount).sum();
+        double totalSpend = purchaseRepo.findByCustomer_Id(customerId)
+                .stream()
+                .mapToDouble(PurchaseRecord::getAmount)
+                .sum();
 
-        int visits = visitRepo.findByCustomerId(customerId).size();
+        int totalVisits = visitRepo.findByCustomer_Id(customerId).size();
 
-        ruleRepo.findAll().stream()
-                .filter(r -> r.getFromTier()
-                        .equals(customer.getCurrentTier()))
-                .filter(r -> r.getMinSpend() <= totalSpend
-                        && r.getMinVisits() <= visits
-                        && r.getActive())
-                .findFirst()
-                .ifPresent(rule -> {
-                    TierHistoryRecord history = new TierHistoryRecord();
-                    history.setCustomerId(customerId);
-                    history.setOldTier(customer.getCurrentTier());
-                    history.setNewTier(rule.getToTier());
-                    history.setReason("Auto upgrade");
-                    customer.setCurrentTier(rule.getToTier());
-                    customerRepo.save(customer);
-                    historyRepo.save(history);
-                });
+        for (TierUpgradeRule rule : ruleRepo.findByActiveTrue()) {
+            if (rule.getFromTier().equals(customer.getCurrentTier())
+                    && totalSpend >= rule.getMinSpend()
+                    && totalVisits >= rule.getMinVisits()) {
+
+                String oldTier = customer.getCurrentTier();
+                customer.setCurrentTier(rule.getToTier());
+                customerRepo.save(customer);
+
+                TierHistoryRecord history = new TierHistoryRecord();
+                history.setCustomer(customer);
+                history.setOldTier(oldTier);
+                history.setNewTier(rule.getToTier());
+                history.setReason("AUTO_UPGRADE");
+
+                historyRepo.save(history);
+            }
+        }
     }
 
     @Override
     public List<TierHistoryRecord> getHistoryByCustomer(Long customerId) {
-        return historyRepo.findByCustomerId(customerId);
+        return historyRepo.findByCustomer_Id(customerId);
     }
 
     @Override

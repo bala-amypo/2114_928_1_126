@@ -1,43 +1,50 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.model.CustomerProfile;
 import com.example.demo.model.PurchaseRecord;
+import com.example.demo.repository.CustomerProfileRepository;
 import com.example.demo.repository.PurchaseRecordRepository;
 import com.example.demo.service.PurchaseRecordService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+
 import org.springframework.stereotype.Service;
 
 @Service
 public class PurchaseRecordServiceImpl implements PurchaseRecordService {
 
-    private final PurchaseRecordRepository repository;
+    private final PurchaseRecordRepository purchaseRepo;
+    private final CustomerProfileRepository customerRepo;
 
-    public PurchaseRecordServiceImpl(PurchaseRecordRepository repository) {
-        this.repository = repository;
+    public PurchaseRecordServiceImpl(PurchaseRecordRepository purchaseRepo,
+                                     CustomerProfileRepository customerRepo) {
+        this.purchaseRepo = purchaseRepo;
+        this.customerRepo = customerRepo;
     }
 
     @Override
-    public PurchaseRecord recordPurchase(PurchaseRecord purchase) {
-        if (purchase.getAmount() <= 0) {
-            throw new IllegalArgumentException("Invalid amount");
-        }
-        return repository.save(purchase);
+    public PurchaseRecord recordPurchase(Long customerId, PurchaseRecord purchase) {
+        CustomerProfile customer = customerRepo.findById(customerId)
+                .orElseThrow(() -> new NoSuchElementException("Customer not found"));
+
+        purchase.setCustomer(customer);
+        return purchaseRepo.save(purchase);
     }
 
     @Override
     public List<PurchaseRecord> getPurchasesByCustomer(Long customerId) {
-        return repository.findByCustomerId(customerId);
-    }
-
-    @Override
-    public List<PurchaseRecord> getAllPurchases() {
-        return repository.findAll();
+        return purchaseRepo.findByCustomer_Id(customerId);
     }
 
     @Override
     public PurchaseRecord getPurchaseById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(NoSuchElementException::new);
+        return purchaseRepo.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Purchase not found"));
+    }
+
+    @Override
+    public List<PurchaseRecord> getAllPurchases() {
+        return purchaseRepo.findAll();
     }
 }
