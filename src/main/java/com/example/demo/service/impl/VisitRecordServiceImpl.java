@@ -17,12 +17,22 @@ public class VisitRecordServiceImpl implements VisitRecordService {
     }
 
     @Override
-    public VisitRecord create(VisitRecord record) {
-        return repository.save(record);
+    public VisitRecord recordVisit(VisitRecord visitRecord) {
+        return repository.save(visitRecord);
     }
 
     @Override
-    public List<VisitRecord> getByCustomer(Long customerId) {
+    public VisitRecord getVisitById(Long id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<VisitRecord> getVisitsByCustomer(Long customerId) {
         return repository.findByCustomerId(customerId);
+    }
+
+    @Override
+    public List<VisitRecord> getAllVisits() {
+        return repository.findAll();
     }
 }

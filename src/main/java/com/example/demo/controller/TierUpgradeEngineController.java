@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.CustomerProfile;
+import com.example.demo.entity.CustomerProfile;
 import com.example.demo.model.TierHistoryRecord;
 import com.example.demo.service.TierUpgradeEngineService;
 import org.springframework.web.bind.annotation.*;
