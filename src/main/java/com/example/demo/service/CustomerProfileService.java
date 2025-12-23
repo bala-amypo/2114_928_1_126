@@ -14,7 +14,7 @@ public interface CustomerProfileService {
 
     List<CustomerProfile> getAllCustomers();
 
-    CustomerProfile updateTier(Long id, String newTier);
+    void updateTier(Long id, String newTier);
 
-    CustomerProfile updateStatus(Long id, boolean active);
+    void updateStatus(Long id, boolean active);
 }
