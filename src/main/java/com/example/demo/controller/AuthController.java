@@ -15,15 +15,10 @@ public class AuthController {
     public String register(@RequestBody RegisterRequest request) {
 
         if (request.getUsername() == null || request.getPassword() == null) {
-            throw new IllegalArgumentException("Username and password required");
+            throw new IllegalArgumentException("Username and password are required");
         }
 
-        // In real implementation:
-        // - save user
-        // - encode password
-        // - assign role
-
-        return "User registered successfully with role: " + request.getRole();
+        return "User registered successfully";
     }
 
     @PostMapping("/login")
@@ -33,9 +28,6 @@ public class AuthController {
             throw new IllegalArgumentException("Invalid credentials");
         }
 
-        // JWT generation logic assumed
-        String dummyToken = "jwt-token-example";
-
-        return new AuthResponse(dummyToken);
+        return new AuthResponse("jwt-token-example");
     }
 }

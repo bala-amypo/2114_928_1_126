@@ -19,4 +19,19 @@ public class TierUpgradeEngineController {
     }
 
     @PostMapping("/evaluate/{customerId}")
-    public String eva
+    public String evaluate(@PathVariable Long customerId) {
+        service.evaluateAndUpgradeTier(customerId);
+        return "Tier evaluation completed";
+    }
+
+    @GetMapping("/history/{customerId}")
+    public List<TierHistoryRecord> getHistoryByCustomer(
+            @PathVariable Long customerId) {
+        return service.getHistoryByCustomer(customerId);
+    }
+
+    @GetMapping
+    public List<TierHistoryRecord> getAllHistory() {
+        return service.getAllHistory();
+    }
+}

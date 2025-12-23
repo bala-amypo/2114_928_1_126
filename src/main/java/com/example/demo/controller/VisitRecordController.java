@@ -34,4 +34,7 @@ public class VisitRecordController {
     }
 
     @GetMapping
-    publi
+    public List<VisitRecord> getAll() {
+        return service.getAllVisits();
+    }
+}
