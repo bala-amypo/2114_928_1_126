@@ -1,12 +1,11 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.TierUpgradeRule;
+import com.example.demo.entity.TierUpgradeRule;
 import com.example.demo.repository.TierUpgradeRuleRepository;
 import com.example.demo.service.TierUpgradeRuleService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class TierUpgradeRuleServiceImpl implements TierUpgradeRuleService {
@@ -18,43 +17,12 @@ public class TierUpgradeRuleServiceImpl implements TierUpgradeRuleService {
     }
 
     @Override
-    public TierUpgradeRule createRule(TierUpgradeRule rule) {
+    public TierUpgradeRule create(TierUpgradeRule rule) {
         return repository.save(rule);
     }
 
     @Override
-    public TierUpgradeRule updateRule(Long id, TierUpgradeRule updated) {
-        TierUpgradeRule existing = repository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Rule not found"));
-
-        existing.setFromTier(updated.getFromTier());
-        existing.setToTier(updated.getToTier());
-        existing.setMinSpend(updated.getMinSpend());
-        existing.setMinVisits(updated.getMinVisits());
-        existing.setActive(updated.getActive());
-
-        return repository.save(existing);
-    }
-
-    // ✅ REQUIRED METHOD (THIS FIXES YOUR ERROR)
-    @Override
-    public TierUpgradeRule getRule(String fromTier, String toTier) {
-        return repository.findByFromTierAndToTier(fromTier, toTier)
-                .orElseThrow(() -> new NoSuchElementException("Rule not found"));
-    }
-
-    @Override
-    public List<TierUpgradeRule> getActiveRules() {
-        return repository.findByActiveTrue();
-    }
-
-    @Override
-    public List<TierUpgradeRule> getAllRules() {
+    public List<TierUpgradeRule> getAll() {
         return repository.findAll();
-    }
-
-    @Override
-    public void deleteRule(Long id) {
-        repository.deleteById(id);
     }
 }

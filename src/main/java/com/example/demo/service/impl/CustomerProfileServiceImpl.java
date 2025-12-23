@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.CustomerProfile;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.CustomerProfileRepository;
 import com.example.demo.service.CustomerProfileService;
 import org.springframework.stereotype.Service;
@@ -16,20 +17,19 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
         this.repository = repository;
     }
 
-    public CustomerProfile create(CustomerProfile customer) {
-        return repository.save(customer);
+    @Override
+    public CustomerProfile create(CustomerProfile profile) {
+        return repository.save(profile);
     }
 
-    public CustomerProfile getById(Long id) {
-        return repository.findById(id).orElseThrow();
-    }
-
+    @Override
     public List<CustomerProfile> getAll() {
         return repository.findAll();
     }
 
-    public CustomerProfile update(Long id, CustomerProfile customer) {
-        customer.setId(id);
-        return repository.save(customer);
+    @Override
+    public CustomerProfile getById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
     }
 }

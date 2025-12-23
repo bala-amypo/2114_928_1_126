@@ -1,13 +1,12 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.PurchaseRecord;
+import com.example.demo.entity.PurchaseRecord;
 import com.example.demo.repository.PurchaseRecordRepository;
 import com.example.demo.service.PurchaseRecordService;
 import org.springframework.stereotype.Service;
 
-
 import java.util.List;
-import java.util.NoSuchElementException;
+
 @Service
 public class PurchaseRecordServiceImpl implements PurchaseRecordService {
 
@@ -17,27 +16,13 @@ public class PurchaseRecordServiceImpl implements PurchaseRecordService {
         this.repository = repository;
     }
 
-    public PurchaseRecord recordPurchase(PurchaseRecord p) {
-        if (p.getAmount() <= 0) {
-            throw new IllegalArgumentException("Amount must be > 0");
-        }
-        return repository.save(p);
+    @Override
+    public PurchaseRecord create(PurchaseRecord record) {
+        return repository.save(record);
     }
 
-    public PurchaseRecord getPurchaseById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Purchase not found"));
-    }
-
-    public List<PurchaseRecord> getPurchasesByCustomer(Long customerId) {
+    @Override
+    public List<PurchaseRecord> getByCustomer(Long customerId) {
         return repository.findByCustomerId(customerId);
-    }
-
-    public List<PurchaseRecord> getAllPurchases() {
-        return repository.findAll();
-    }
-
-    public void deletePurchase(Long id) {
-        repository.delete(getPurchaseById(id));
     }
 }
