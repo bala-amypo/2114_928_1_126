@@ -16,10 +16,22 @@ public class TierHistoryRecord {
     private String reason;
     private LocalDateTime changedAt;
 
-    @PrePersist
-    public void setTime() {
-        changedAt = LocalDateTime.now();
+    public TierHistoryRecord() {
     }
 
-    // getters and setters
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+
+    public void setOldTier(String oldTier) {
+        this.oldTier = oldTier;
+    }
+
+    public void setNewTier(String newTier) {
+        this.newTier = newTier;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
 }
