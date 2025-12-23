@@ -1,9 +1,8 @@
 package com.example.demo.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 public class CustomerProfile {
@@ -12,77 +11,37 @@ public class CustomerProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username;     // for AuthService
-    private String password;     // for AuthService
+    @Column(unique = true)
+    private String customerId;
+
     private String fullName;
+
+    @Column(unique = true)
     private String email;
+
+    @Column(unique = true)
     private String phone;
+
     private String currentTier;
-    private boolean active;      // for AuthService / CustomerProfileService
+    private Boolean active;
 
-    // Getters & Setters
+    private LocalDateTime createdAt;
 
-    public Long getId() {
-        return id;
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<PurchaseRecord> purchases;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<VisitRecord> visits;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<TierHistoryRecord> history;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+        if (this.currentTier == null) this.currentTier = "BRONZE";
+        if (this.active == null) this.active = true;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getCurrentTier() {
-        return currentTier;
-    }
-
-    public void setCurrentTier(String currentTier) {
-        this.currentTier = currentTier;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
+    // getters & setters
 }

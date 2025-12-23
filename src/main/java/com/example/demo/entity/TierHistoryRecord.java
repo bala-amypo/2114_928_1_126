@@ -10,28 +10,19 @@ public class TierHistoryRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long customerId;
     private String oldTier;
     private String newTier;
     private String reason;
     private LocalDateTime changedAt;
 
-    public TierHistoryRecord() {
+    @ManyToOne
+    @JoinColumn(name = "customer_id", nullable = false)
+    private CustomerProfile customer;
+
+    @PrePersist
+    public void prePersist() {
+        this.changedAt = LocalDateTime.now();
     }
 
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
-    }
-
-    public void setOldTier(String oldTier) {
-        this.oldTier = oldTier;
-    }
-
-    public void setNewTier(String newTier) {
-        this.newTier = newTier;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
+    // getters & setters
 }

@@ -10,47 +10,20 @@ public class PurchaseRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long customerId;
     private Double amount;
     private LocalDate purchaseDate;
     private String storeLocation;
 
-    public PurchaseRecord() {
+    @ManyToOne
+    @JoinColumn(name = "customer_id", nullable = false)
+    private CustomerProfile customer;
+
+    @PrePersist
+    public void validate() {
+        if (amount == null || amount <= 0) {
+            throw new IllegalArgumentException("Purchase amount must be > 0");
+        }
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public Long getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
-    }
-
-    public Double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
-
-    public LocalDate getPurchaseDate() {
-        return purchaseDate;
-    }
-
-    public void setPurchaseDate(LocalDate purchaseDate) {
-        this.purchaseDate = purchaseDate;
-    }
-
-    public String getStoreLocation() {
-        return storeLocation;
-    }
-
-    public void setStoreLocation(String storeLocation) {
-        this.storeLocation = storeLocation;
-    }
+    // getters & setters
 }

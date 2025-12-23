@@ -10,34 +10,40 @@ import java.util.List;
 @RequestMapping("/api/customers")
 public class CustomerProfileController {
 
-    private final CustomerProfileService service;
+    private final CustomerProfileService customerProfileService;
 
-    public CustomerProfileController(CustomerProfileService service) {
-        this.service = service;
+    public CustomerProfileController(CustomerProfileService customerProfileService) {
+        this.customerProfileService = customerProfileService;
     }
 
+    // POST /api/customers
     @PostMapping
-    public CustomerProfile create(@RequestBody CustomerProfile c) {
-        return service.createCustomer(c);
+    public CustomerProfile createCustomer(@RequestBody CustomerProfile customer) {
+        return customerProfileService.createCustomer(customer);
     }
 
+    // GET /api/customers/{id}
     @GetMapping("/{id}")
-    public CustomerProfile get(@PathVariable Long id) {
-        return service.getCustomerById(id);
+    public CustomerProfile getCustomer(@PathVariable Long id) {
+        return customerProfileService.getCustomerById(id);
     }
 
-    @GetMapping("/lookup/{customerId}")
-    public CustomerProfile lookup(@PathVariable String customerId) {
-        return service.findByCustomerId(customerId);
-    }
-
+    // GET /api/customers
     @GetMapping
-    public List<CustomerProfile> getAll() {
-        return service.getAllCustomers();
+    public List<CustomerProfile> getAllCustomers() {
+        return customerProfileService.getAllCustomers();
     }
 
+    // PUT /api/customers/{id}/tier
     @PutMapping("/{id}/tier")
-    public CustomerProfile update(@PathVariable Long id, @RequestBody CustomerProfile c) {
-        return service.updateCustomer(id, c);
+    public void updateTier(@PathVariable Long id,
+                           @RequestParam String newTier) {
+        customerProfileService.updateTier(id, newTier);
+    }
+
+    // GET /api/customers/lookup/{customerId}
+    @GetMapping("/lookup/{customerId}")
+    public CustomerProfile lookupByCustomerId(@PathVariable String customerId) {
+        return customerProfileService.findByCustomerId(customerId);
     }
 }

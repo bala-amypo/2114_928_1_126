@@ -2,39 +2,42 @@ package com.example.demo.controller;
 
 import com.example.demo.model.PurchaseRecord;
 import com.example.demo.service.PurchaseRecordService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/purchases")
-@Tag(name = "Purchase Records")
 public class PurchaseRecordController {
 
-    private final PurchaseRecordService service;
+    private final PurchaseRecordService purchaseRecordService;
 
-    public PurchaseRecordController(PurchaseRecordService service) {
-        this.service = service;
+    public PurchaseRecordController(PurchaseRecordService purchaseRecordService) {
+        this.purchaseRecordService = purchaseRecordService;
     }
 
-    @PostMapping
-    public PurchaseRecord recordPurchase(@RequestBody PurchaseRecord purchase) {
-        return service.recordPurchase(purchase);
+    // POST /api/purchases/customer/{customerId}
+    @PostMapping("/customer/{customerId}")
+    public PurchaseRecord recordPurchase(@PathVariable Long customerId,
+                                         @RequestBody PurchaseRecord purchase) {
+        return purchaseRecordService.recordPurchase(customerId, purchase);
     }
 
+    // GET /api/purchases/customer/{customerId}
     @GetMapping("/customer/{customerId}")
-    public List<PurchaseRecord> getByCustomer(@PathVariable Long customerId) {
-        return service.getPurchasesByCustomer(customerId);
+    public List<PurchaseRecord> getPurchasesByCustomer(@PathVariable Long customerId) {
+        return purchaseRecordService.getPurchasesByCustomer(customerId);
     }
 
+    // GET /api/purchases/{id}
     @GetMapping("/{id}")
-    public PurchaseRecord getById(@PathVariable Long id) {
-        return service.getPurchaseById(id);
+    public PurchaseRecord getPurchaseById(@PathVariable Long id) {
+        return purchaseRecordService.getPurchaseById(id);
     }
 
+    // GET /api/purchases
     @GetMapping
-    public List<PurchaseRecord> getAll() {
-        return service.getAllPurchases();
+    public List<PurchaseRecord> getAllPurchases() {
+        return purchaseRecordService.getAllPurchases();
     }
 }
