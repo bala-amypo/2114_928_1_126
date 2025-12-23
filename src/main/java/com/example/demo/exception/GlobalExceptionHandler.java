@@ -1,22 +1,20 @@
 package com.example.demo.exception;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoSuchElementException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handleNotFound() {
-        return "Resource not found";
+    public ResponseEntity<String> notFound() {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("Resource not found");
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleValidation(Exception e) {
-        return e.getMessage();
+    public ResponseEntity<String> badRequest(IllegalArgumentException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
     }
 }
