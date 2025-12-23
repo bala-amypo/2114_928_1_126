@@ -41,9 +41,10 @@ public class CustomerProfileController {
         customerProfileService.updateTier(id, newTier);
     }
 
-    // GET /api/customers/lookup/{customerId}
-    @GetMapping("/lookup/{customerId}")
-    public CustomerProfile lookupByCustomerId(@PathVariable String customerId) {
-        return customerProfileService.findByCustomerId(customerId);
+    // PUT /api/customers/{id}/status
+    @PutMapping("/{id}/status")
+    public void updateStatus(@PathVariable Long id,
+                             @RequestParam boolean active) {
+        customerProfileService.updateStatus(id, active);
     }
-}  
+}

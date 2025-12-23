@@ -3,20 +3,36 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "customer_profiles")
 public class CustomerProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
-    private String customerId; // <-- Add this field
+    @Column(unique = true)
+    private String customerId; // Added this to support lookup
 
     private String name;
+
+    private String email;
+
     private String currentTier;
+
     private boolean active;
 
-    // Getters and setters
+    // Constructors
+    public CustomerProfile() {}
+
+    public CustomerProfile(String customerId, String name, String email, String currentTier, boolean active) {
+        this.customerId = customerId;
+        this.name = name;
+        this.email = email;
+        this.currentTier = currentTier;
+        this.active = active;
+    }
+
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -39,6 +55,14 @@ public class CustomerProfile {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getCurrentTier() {

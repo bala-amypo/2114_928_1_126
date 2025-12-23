@@ -30,6 +30,12 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
     }
 
     @Override
+    public CustomerProfile findByCustomerId(String customerId) {
+        return customerRepo.findByCustomerId(customerId)
+                .orElseThrow(() -> new NoSuchElementException("Customer not found"));
+    }
+
+    @Override
     public List<CustomerProfile> getAllCustomers() {
         return customerRepo.findAll();
     }
