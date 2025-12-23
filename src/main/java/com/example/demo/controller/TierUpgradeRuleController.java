@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.TierUpgradeRule;
-import com.example.demo.service.TierUpgradeRuleService;
+import com.example.demo.entity.TierUpgradeRule;
+import com.example.demo.repository.TierUpgradeRuleRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,37 +10,19 @@ import java.util.List;
 @RequestMapping("/api/tier-rules")
 public class TierUpgradeRuleController {
 
-    private final TierUpgradeRuleService service;
+    private final TierUpgradeRuleRepository repository;
 
-    public TierUpgradeRuleController(TierUpgradeRuleService service) {
-        this.service = service;
+    public TierUpgradeRuleController(TierUpgradeRuleRepository repository) {
+        this.repository = repository;
     }
 
     @PostMapping
     public TierUpgradeRule create(@RequestBody TierUpgradeRule rule) {
-        return service.createRule(rule);
-    }
-
-    @PutMapping("/{id}")
-    public TierUpgradeRule update(@PathVariable Long id, @RequestBody TierUpgradeRule rule) {
-        return service.updateRule(id, rule);
-    }
-
-    @GetMapping("/lookup")
-    public TierUpgradeRule lookup(@RequestParam String fromTier,
-                                  @RequestParam String toTier) {
-        return service.getRule(fromTier, toTier);
-    }
-
-    @GetMapping("/active")
-    public List<TierUpgradeRule> active() {
-        return service.getActiveRules();
+        return repository.save(rule);
     }
 
     @GetMapping
     public List<TierUpgradeRule> getAll() {
-        return service.getAllRules();
+        return repository.findAll();
     }
-
-    
 }

@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.CustomerProfile;
-import com.example.demo.service.CustomerProfileService;
+import com.example.demo.repository.CustomerProfileRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,24 +10,24 @@ import java.util.List;
 @RequestMapping("/api/customers")
 public class CustomerProfileController {
 
-    private final CustomerProfileService service;
+    private final CustomerProfileRepository repository;
 
-    public CustomerProfileController(CustomerProfileService service) {
-        this.service = service;
+    public CustomerProfileController(CustomerProfileRepository repository) {
+        this.repository = repository;
     }
 
     @PostMapping
-    public CustomerProfile create(@RequestBody CustomerProfile customer) {
-        return service.create(customer);
-    }
-
-    @GetMapping("/{id}")
-    public CustomerProfile get(@PathVariable Long id) {
-        return service.getById(id);
+    public CustomerProfile create(@RequestBody CustomerProfile profile) {
+        return repository.save(profile);
     }
 
     @GetMapping
     public List<CustomerProfile> getAll() {
-        return service.getAll();
+        return repository.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public CustomerProfile getById(@PathVariable Long id) {
+        return repository.findById(id).orElseThrow();
     }
 }
