@@ -46,4 +46,11 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
         customer.setActive(active);
         return repository.save(customer);
     }
+
+    // ✅ IMPLEMENT THE MISSING METHOD
+    @Override
+    public CustomerProfile findByCustomerId(String customerId) {
+        return repository.findByCustomerId(customerId)
+                .orElseThrow(() -> new NoSuchElementException("Customer not found"));
+    }
 }
