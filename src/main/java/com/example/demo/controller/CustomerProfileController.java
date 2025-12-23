@@ -1,60 +1,80 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.CustomerProfileDTO;
 import com.example.demo.model.CustomerProfile;
 import com.example.demo.service.CustomerProfileService;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.example.demo.dto.CustomerProfileRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/customers")
-@Tag(name = "Customer Profile")
 public class CustomerProfileController {
 
-    private final CustomerProfileService service;
+    private final CustomerProfileService customerProfileService;
 
-    public CustomerProfileController(CustomerProfileService service) {
-        this.service = service;
+    @Autowired
+    public CustomerProfileController(CustomerProfileService customerProfileService) {
+        this.customerProfileService = customerProfileService;
     }
 
+    // CREATE new customer
     @PostMapping
-    public CustomerProfile create(@RequestBody CustomerProfileDTO dto) {
+    public ResponseEntity<CustomerProfile> createCustomer(@RequestBody CustomerProfileRequest request) {
         CustomerProfile customer = new CustomerProfile();
-        customer.setCustomerId(dto.getCustomerId());
-        customer.setFullName(dto.getFullName());
-        customer.setEmail(dto.getEmail());
-        customer.setPhone(dto.getPhone());
-        return service.createCustomer(customer);
+        if (request.getCustomerId() != null) {
+            customer.setCustomerId(Long.valueOf(request.getCustomerId())); // convert String -> Long
+        }
+        customer.setFullName(request.getFullName());
+        customer.setEmail(request.getEmail());
+        customer.setPhone(request.getPhone());
+        customer.setUsername(request.getUsername());
+        customer.setPassword(request.getPassword());
+        customer.setActive(request.isActive());
+        customer.setCurrentTier(request.getCurrentTier());
+
+        CustomerProfile saved = customerProfileService.saveCustomer(customer);
+        return ResponseEntity.ok(saved);
     }
 
-    @GetMapping("/{id}")
-    public CustomerProfile getById(@PathVariable Long id) {
-        return service.getCustomerById(id);
-    }
-
+    // READ all customers
     @GetMapping
-    public List<CustomerProfile> getAll() {
-        return service.getAllCustomers();
+    public ResponseEntity<List<CustomerProfile>> getAllCustomers() {
+        List<CustomerProfile> customers = customerProfileService.getAllCustomers();
+        return ResponseEntity.ok(customers);
     }
 
-    @GetMapping("/lookup/{customerId}")
-    public CustomerProfile lookup(@PathVariable String customerId) {
-        return service.findByCustomerId(customerId);
+    // READ customer by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<CustomerProfile> getCustomerById(@PathVariable Long id) {
+        CustomerProfile customer = customerProfileService.getCustomerById(id);
+        return ResponseEntity.ok(customer);
     }
 
-    @PutMapping("/{id}/tier")
-    public CustomerProfile updateTier(
+    // UPDATE customer
+    @PutMapping("/{id}")
+    public ResponseEntity<CustomerProfile> updateCustomer(
             @PathVariable Long id,
-            @RequestParam String tier) {
-        return service.updateTier(id, tier);
+            @RequestBody CustomerProfileRequest request) {
+        CustomerProfile customer = customerProfileService.getCustomerById(id);
+        customer.setFullName(request.getFullName());
+        customer.setEmail(request.getEmail());
+        customer.setPhone(request.getPhone());
+        customer.setUsername(request.getUsername());
+        customer.setPassword(request.getPassword());
+        customer.setActive(request.isActive());
+        customer.setCurrentTier(request.getCurrentTier());
+
+        CustomerProfile updated = customerProfileService.saveCustomer(customer);
+        return ResponseEntity.ok(updated);
     }
 
-    @PutMapping("/{id}/status")
-    public CustomerProfile updateStatus(
-            @PathVariable Long id,
-            @RequestParam boolean active) {
-        return service.updateStatus(id, active);
+    // DELETE customer
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteCustomer(@PathVariable Long id) {
+        customerProfileService.deleteCustomer(id);
+        return ResponseEntity.ok("Customer deleted successfully");
     }
 }

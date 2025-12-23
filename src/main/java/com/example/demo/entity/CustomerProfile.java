@@ -86,4 +86,3 @@ public class CustomerProfile {
         this.active = active;
     }
 }
-customer.setId(Long.valueOf(request.getCustomerId()));
