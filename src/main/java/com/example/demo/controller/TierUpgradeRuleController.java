@@ -30,4 +30,20 @@ public class TierUpgradeRuleController {
         return service.updateRule(id, rule);
     }
 
-    @GetMapping("/activ
+    @GetMapping("/active")
+    public List<TierUpgradeRule> getActive() {
+        return service.getActiveRules();
+    }
+
+    @GetMapping("/lookup")
+    public TierUpgradeRule lookup(
+            @RequestParam String fromTier,
+            @RequestParam String toTier) {
+        return service.getRule(fromTier, toTier);
+    }
+
+    @GetMapping
+    public List<TierUpgradeRule> getAll() {
+        return service.getAllRules();
+    }
+}
