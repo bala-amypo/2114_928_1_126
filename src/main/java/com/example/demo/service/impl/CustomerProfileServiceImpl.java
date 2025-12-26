@@ -58,3 +58,4 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
         customer.setActive(active);
         return repository.save(customer);
     }
+}
