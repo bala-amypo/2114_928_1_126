@@ -1,43 +1,41 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.VisitRecord;
-import com.example.demo.service.VisitRecordService;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.example.demo.model.VisitRecord;
+import com.example.demo.service.VisitRecordService;
 
 @RestController
 @RequestMapping("/api/visits")
 public class VisitRecordController {
 
-    private final VisitRecordService visitRecordService;
+    private final VisitRecordService service;
 
-    public VisitRecordController(VisitRecordService visitRecordService) {
-        this.visitRecordService = visitRecordService;
+    public VisitRecordController(VisitRecordService service) {
+        this.service = service;
     }
 
-    // POST /api/visits/customer/{customerId}
-    @PostMapping("/customer/{customerId}")
-    public VisitRecord recordVisit(@PathVariable Long customerId,
-                                   @RequestBody VisitRecord visit) {
-        return visitRecordService.recordVisit(customerId, visit);
+    @PostMapping
+    public VisitRecord create(@RequestBody VisitRecord visit) {
+        return service.recordVisit(visit);
     }
 
-    // GET /api/visits/customer/{customerId}
-    @GetMapping("/customer/{customerId}")
-    public List<VisitRecord> getVisitsByCustomer(@PathVariable Long customerId) {
-        return visitRecordService.getVisitsByCustomer(customerId);
-    }
-
-    // GET /api/visits/{id}
     @GetMapping("/{id}")
-    public VisitRecord getVisitById(@PathVariable Long id) {
-        return visitRecordService.getVisitById(id);
+    public Optional<VisitRecord> getById(@PathVariable Long id) {
+        return service.getVisitById(id);
     }
 
-    // GET /api/visits
     @GetMapping
-    public List<VisitRecord> getAllVisits() {
-        return visitRecordService.getAllVisits();
+    public List<VisitRecord> getAll() {
+        return service.getAllVisits();
+    }
+
+    @GetMapping("/customer/{customerId}")
+    public List<VisitRecord> getByCustomer(
+            @PathVariable Long customerId) {
+        return service.getVisitsByCustomer(customerId);
     }
 }

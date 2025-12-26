@@ -1,50 +1,50 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.TierUpgradeRule;
-import com.example.demo.service.TierUpgradeRuleService;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.example.demo.model.TierUpgradeRule;
+import com.example.demo.service.TierUpgradeRuleService;
 
 @RestController
 @RequestMapping("/api/tier-rules")
 public class TierUpgradeRuleController {
 
-    private final TierUpgradeRuleService tierUpgradeRuleService;
+    private final TierUpgradeRuleService service;
 
-    public TierUpgradeRuleController(TierUpgradeRuleService tierUpgradeRuleService) {
-        this.tierUpgradeRuleService = tierUpgradeRuleService;
+    public TierUpgradeRuleController(TierUpgradeRuleService service) {
+        this.service = service;
     }
 
-    // POST /api/tier-rules
     @PostMapping
-    public TierUpgradeRule createRule(@RequestBody TierUpgradeRule rule) {
-        return tierUpgradeRuleService.createRule(rule);
+    public TierUpgradeRule create(@RequestBody TierUpgradeRule rule) {
+        return service.createRule(rule);
     }
 
-    // PUT /api/tier-rules/{id}
     @PutMapping("/{id}")
-    public TierUpgradeRule updateRule(@PathVariable Long id,
-                                      @RequestBody TierUpgradeRule rule) {
-        return tierUpgradeRuleService.updateRule(id, rule);
+    public TierUpgradeRule update(
+            @PathVariable Long id,
+            @RequestBody TierUpgradeRule rule) {
+        return service.updateRule(id, rule);
     }
 
-    // GET /api/tier-rules/active
-    @GetMapping("/active")
-    public List<TierUpgradeRule> getActiveRules() {
-        return tierUpgradeRuleService.getActiveRules();
-    }
-
-    // GET /api/tier-rules/lookup?fromTier=&toTier=
-    @GetMapping("/lookup")
-    public TierUpgradeRule lookupRule(@RequestParam String fromTier,
-                                      @RequestParam String toTier) {
-        return tierUpgradeRuleService.getRule(fromTier, toTier);
-    }
-
-    // GET /api/tier-rules
     @GetMapping
-    public List<TierUpgradeRule> getAllRules() {
-        return tierUpgradeRuleService.getAllRules();
+    public List<TierUpgradeRule> getAll() {
+        return service.getAllRules();
+    }
+
+    @GetMapping("/active")
+    public List<TierUpgradeRule> getActive() {
+        return service.getActiveRules();
+    }
+
+    @GetMapping("/lookup")
+    public Optional<TierUpgradeRule> lookup(
+            @RequestParam String fromTier,
+            @RequestParam String toTier) {
+        return service.getRule(fromTier, toTier);
     }
 }
+
