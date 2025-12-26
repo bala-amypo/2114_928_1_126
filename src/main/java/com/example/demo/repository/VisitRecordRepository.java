@@ -17,4 +17,3 @@ public interface VisitRecordRepository
     List<VisitRecord> findByVisitDateBetween(
             LocalDate start, LocalDate end);
 }
-

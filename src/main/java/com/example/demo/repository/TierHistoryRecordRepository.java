@@ -17,3 +17,4 @@ public interface TierHistoryRecordRepository
     List<TierHistoryRecord> findByChangedAtBetween(
             LocalDateTime start, LocalDateTime end);
 }
+
