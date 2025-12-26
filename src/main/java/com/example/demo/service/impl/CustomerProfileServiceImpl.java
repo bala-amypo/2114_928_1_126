@@ -1,56 +1,60 @@
 package com.example.demo.service.impl;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
 import com.example.demo.model.CustomerProfile;
 import com.example.demo.repository.CustomerProfileRepository;
 import com.example.demo.service.CustomerProfileService;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-
-import org.springframework.stereotype.Service;
-
 @Service
 public class CustomerProfileServiceImpl implements CustomerProfileService {
 
-    private final CustomerProfileRepository customerRepo;
+    private final CustomerProfileRepository repository;
 
-    public CustomerProfileServiceImpl(CustomerProfileRepository customerRepo) {
-        this.customerRepo = customerRepo;
+    public CustomerProfileServiceImpl(CustomerProfileRepository repository) {
+        this.repository = repository;
     }
 
     @Override
     public CustomerProfile createCustomer(CustomerProfile customer) {
-        return customerRepo.save(customer);
+        if (customer.getCurrentTier() == null) {
+            customer.setCurrentTier("BRONZE");
+        }
+        customer.setCreatedAt(LocalDateTime.now());
+        return repository.save(customer);
     }
 
     @Override
     public CustomerProfile getCustomerById(Long id) {
-        return customerRepo.findById(id)
+        return repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Customer not found"));
     }
 
     @Override
-    public CustomerProfile findByCustomerId(String customerId) {
-        return customerRepo.findByCustomerId(customerId)
-                .orElseThrow(() -> new NoSuchElementException("Customer not found"));
+    public Optional<CustomerProfile> findByCustomerId(String customerId) {
+        return repository.findByCustomerId(customerId);
     }
 
     @Override
     public List<CustomerProfile> getAllCustomers() {
-        return customerRepo.findAll();
+        return repository.findAll();
     }
 
     @Override
-    public void updateTier(Long id, String newTier) {
+    public CustomerProfile updateTier(Long id, String newTier) {
         CustomerProfile customer = getCustomerById(id);
         customer.setCurrentTier(newTier);
-        customerRepo.save(customer);
+        return repository.save(customer);
     }
 
     @Override
-    public void updateStatus(Long id, boolean active) {
+    public CustomerProfile updateStatus(Long id, boolean active) {
         CustomerProfile customer = getCustomerById(id);
         customer.setActive(active);
-        customerRepo.save(customer);
+        return repository.save(customer);
     }
-}
